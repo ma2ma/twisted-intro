@@ -4,6 +4,7 @@ import optparse, os, socket, time
 
 
 def parse_args():
+
     usage = """usage: %prog [options] poetry-file
 
 This is the Slow Poetry Server, blocking edition.
@@ -59,10 +60,10 @@ def send_poetry(sock, poetry_file, num_bytes, delay):
             inputf.close()
             return
 
-        print 'Sending %d bytes' % len(bytes)
+        print ('Sending %d bytes' % len(bytes))
 
         try:
-            sock.sendall(bytes) # this is a blocking call
+            sock.sendall(bytes.encode()) # this is a blocking call
         except socket.error:
             sock.close()
             inputf.close()
@@ -75,7 +76,7 @@ def serve(listen_socket, poetry_file, num_bytes, delay):
     while True:
         sock, addr = listen_socket.accept()
 
-        print 'Somebody at %s wants poetry!' % (addr,)
+        print ('Somebody at %s wants poetry!' % (addr,))
 
         send_poetry(sock, poetry_file, num_bytes, delay)
 
@@ -89,7 +90,7 @@ def main():
 
     sock.listen(5)
 
-    print 'Serving %s on port %s.' % (poetry_file, sock.getsockname()[1])
+    print ('Serving %s on port %s.' % (poetry_file, sock.getsockname()[1]))
 
     serve(sock, poetry_file, options.num_bytes, options.delay)
 
